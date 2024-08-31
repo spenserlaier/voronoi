@@ -35,9 +35,9 @@ struct Color {
     b: usize,
 }
 fn hex_to_color(hex: usize)-> Color {
-    let r = 0x0000FF & (hex >> 16);
-    let g = 0x0000FF & (hex >> 8);
-    let b = 0x0000FF & hex;
+    let r = (0x0000FF & (hex >> 16))/2;
+    let g = (0x0000FF & (hex >> 8))/2;
+    let b = (0x0000FF & hex)/2;
     return Color {r, g, b}
 }
 fn write_colors_to_image(colors: Vec<Color>) -> std::io::Result<()>{
