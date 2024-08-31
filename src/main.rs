@@ -1,12 +1,10 @@
 use rand::prelude::*;
 use std::fs::File;
 use std::io::prelude::*;
-//use std::cmp;
 
 
-const IMG_WIDTH :usize = 512;
-const IMG_HEIGHT : usize = 512;
-//const NUM_POINTS : usize = (IMG_WIDTH*IMG_HEIGHT) / 10; 
+const IMG_WIDTH :usize = 1920;
+const IMG_HEIGHT : usize = 1080;
 const NUM_POINTS :usize = 10;
 
 struct Point {
@@ -39,11 +37,6 @@ fn hex_to_color(hex: usize)-> Color {
 }
 fn write_colors_to_image(colors: Vec<Color>) -> std::io::Result<()>{
     let mut file = File::create("voronoi.ppm")?;
-    // ppm format:
-    // P3\n
-    // {img_width} {img_height}\n 
-    // 255\n --> maximum color size
-    // {a list of rgb triplets}
     let header = format!("P3\n{img_width} {img_height}\n255\n", img_width=IMG_WIDTH, img_height=IMG_HEIGHT);
     file.write(header.as_bytes())?;
     for color in colors {
@@ -53,19 +46,18 @@ fn write_colors_to_image(colors: Vec<Color>) -> std::io::Result<()>{
     return Ok(());
 }
 fn main(){
-    let color_hex_vals = [0x5E0B15, 0x90323D, 0xD9CAB3, 0xBC8034, 0x8C7A6B];
+    let color_hex_vals = [0x5E0B15, 0x90323D, 0xD9CAB3, 0xBC8034, 0x8C7A6B, 0x873e23, 0x28743];
     let mut colors : Vec<Color>= Vec::new();
     for hex in color_hex_vals {
         colors.push(hex_to_color(hex));
     }
-    //let mut rows : Vec<String> = Vec::new();
     let mut image_colors: Vec<Color> = Vec::new();
     let mut points: Vec<Point> = Vec::new();
     let mut rng = thread_rng();
     for _ in 0..NUM_POINTS {
         points.push(generate_point(&mut rng, IMG_WIDTH, IMG_HEIGHT).unwrap());
     }
-    println!("we made it to the point of generating image colors");
+    println!("Done generating points.");
     
     for row in 0..IMG_HEIGHT {
         for col in 0..IMG_WIDTH {
@@ -85,17 +77,7 @@ fn main(){
             image_colors.push(pixel_color.clone());
         }
     }
-    println!("we made it to the point of writing colors to the image");
+    println!("Done generating colors.");
     write_colors_to_image(image_colors).unwrap();
-  //  for row in 0..IMG_HEIGHT {
-  //      let mut current_line = String::new();
-  //      for col in 0..IMG_WIDTH {
-  //          //TODO: if i remember correctly, the ppm format might impose limits on line size.
-  //          //if this is the case, it may make sense to put each color on its own line. requires
-  //          //research.
-  //          current_line.push_str(&String::from("0 255 0 "))
-  //      }
-  //      current_line.push_str(&String::from("\n"));
-  //      file.write(current_line.as_bytes())?;
-  //  }
+    println!("Done writing colors to image.")
 }
