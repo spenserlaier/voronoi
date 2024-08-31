@@ -23,6 +23,11 @@ fn euclidian_squared_distance(p1: &Point, p2: &Point)-> isize{
     let col_diff = p1.col as isize - p2.col as isize;
     return row_diff*row_diff + col_diff*col_diff
 }
+fn manhattan_distance(p1: &Point, p2: &Point) -> isize {
+    let row_diff = (p1.row as isize - p2.row as isize).abs();
+    let col_diff = (p1.col as isize - p2.col as isize).abs();
+    return row_diff + col_diff;
+}
 #[derive(Clone)]
 struct Color {
     r: usize,
@@ -66,7 +71,8 @@ fn main(){
             let mut prev_idx = IMG_WIDTH;
             for idx in 0..points.len() {
                 let point = points.get(idx).unwrap();
-                let new_dist = euclidian_squared_distance(&image_point, &point);
+                //let new_dist = euclidian_squared_distance(&image_point, &point);
+                let new_dist = manhattan_distance(&image_point, &point);
                 if new_dist < prev_dist{
                     prev_dist = new_dist;
                     prev_idx = idx;
